@@ -1,0 +1,353 @@
+1.由于IOS-app的打开一个webview进行链接访问前，会对url中的中文编码进行解析，如链接中包含escape 编码，则会导致IOS报错，当前webview显示白页；所以url中一定要使用encodeURIComponent编码。
+
+2.textarea标签有默认文字的情况下，点击输入文字，然后删掉输入的文字，正常情况下应该显示的是默认文字，但是在某些手机的一些浏览器，特别是Safari浏览器中，显示的默认文字不全，有缺失的情况。
+    解决办法：height=line-height*rows
+<textarea class="remark" rows="3">
+在w3school，你可以找到你所需要的所有的网站建设教程。
+</textarea>
+.remark::-webkit-input-placeholder{
+   line-height=12px;
+   height=36px;
+}
+
+3.input设置disabled属性时，IOS会使用input value disabled的默认样式#ccc，若要改变其颜色须设置样式属性如下：
+input:disabled
+{
+ -webkit-text-fill-color: #333; 
+-webkit-opacity: 1;
+ color: #333; 
+}
+
+4.IOS页面惯性滑动过程中不产生事件的解决方案
+position: sticky;
+position:sticky 的生效是有一定的限制的，总结如下：
+须指定 top, right, bottom 或 left 四个阈值其中之一，才可使粘性定位生效。否则其行为与相对定位相同。
+并且 top 和 bottom 同时设置时，top 生效的优先级高，left 和 right 同时设置时，left 的优先级高。
+设定为 position:sticky 元素的任意父节点的 overflow 属性必须是 visible，否则 position:sticky 不会生效。这里需要解释一下：
+如果 position:sticky 元素的任意父节点定位设置为 overflow:hidden，则父容器无法进行滚动，所以 position:sticky 元素也不会有滚动然后固定的情况。
+如果 position:sticky 元素的任意父节点定位设置为 position:relative | absolute | fixed，则元素相对父元素进行定位，而不会相对 viewprot 定位。
+达到设定的阀值。这个还算好理解，也就是设定了 position:sticky 的元素表现为 relative 还是 fixed 是根据元素是否达到设定了的阈值决定的。
+
+5.移动端:active伪类无效的解决方法
+:active伪类常用于设定点击状态下或其他被激活状态下一个链接的样式。最常用于锚点<a href="#">这种情况，一般主流浏览器下也支持其他元素，如button等。该伪类下定义的CSS样式只在按下鼠标按钮与释放鼠标按钮之间的短暂瞬间被触发显示。项目中是移动端页面要做一个模块状态切换的效果，在PC上测试没有问题，到了手机端发现安卓的正常，iOS则没有效果。在iOS系统的移动设备中，需要在按钮元素或body/html上绑定一个touchstart事件才能激活:active状态。
+document.body.addEventListener('touchstart', function(){  //...空函数即可 });
+例如：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <title>demo1</title>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <style type="text/css">
+        *{ margin: 0; padding: 0;}
+        body{ font-family: "microsoft yahei", "Arial"; background: #fbda11;
+            -webkit-tap-highlight-color: rgba(0,0,0,0); tap-highlight-color: rgba(0,0,0,0); 
+            -webkit-focus-ring-color: rgba(0, 0, 0, 0); focus-focus-ring-color: rgba(0, 0, 0, 0);}
+        img{ width: 100%; display: block;}
+        i{ font-style: normal;}
+        .container{ position: relative; width: 100%; height: 100%;}
+        .main{ margin: 10px; padding: 5px;}
+        .main .prd{ overflow: hidden; position: relative; margin-bottom: 10px; background: #fff;}
+        .main .prd:active{ background: #e6f5ff;}
+        .main .prd .tupian{ width: 34%; min-height: 86px; float: left;}
+        .main .prd .msg{ float: left; margin-left: 2%; width: 64%; line-height: 18px;}
+        .main .prd .msg .summary h3{ font-size: 16px; color: #000; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin: 5px 0;}
+        .main .prd .msg .summary>p{ font-size: 12px; color: #aaa; width: 60%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+        .main .prd .msg .summary .price{ overflow: hidden; position: absolute; bottom: 8px;}
+        .main .prd .msg .summary .price p{ font-size: 14px; color: #d50080; float: left; margin-right: 10px;}
+        .main .prd .msg .summary .price p i{ font-size: 22px; font-weight: bold;}
+        .main .prd .msg .summary .price p span{ font-size: 12px; color: #666;}
+        .main .prd .msg .summary .price del{ float: left; font-size: 12px; color: #aaa; padding-top: 3px;}
+    </style>
+</head>
+<body>
+	<div class="container">
+        <div class="main">
+            <a href="">
+                <div class="prd">
+                    <div class="tupian">
+                        <img src="prd.png" alt="">
+                    </div>
+                    <div class="msg">
+                        <div class="summary">
+                            <h3>江西的三清山</h3>
+                            <p>江西&nbsp;上饶&nbsp;4A景区4A景区</p>
+                            <div class="price">
+                                <p>&yen;<i>208</i><span>起</span></p>
+                                <del>&yen;480</del>
+                            </div>                              
+                        </div>                                 
+                    </div>
+                </div>
+            </a>        
+        </div>
+	</div>	
+	<script type="text/javascript">
+        document.body.addEventListener('touchstart', function(){});
+	</script>
+</body>
+</html>
+
+6.媒体查询实现横竖屏不同样式排版定义
+在浏览网页时横屏/竖屏看网页时，内容一致，但是排版和样式却大不一样，利用CSS3中@media媒体查询可以很轻易的实现横竖屏不同样式排版定义。
+@media all and (orientation : landscape) { 
+              h2{ color:red; }/*横屏时样式*/
+        } 
+@media all and (orientation : portrait){ 
+        h2{ color:green; }/*竖屏时样式*/
+    }
+
+7.nth-child
+:nth-child(odd){ background: pink;} 选取奇数的元素
+:nth-child(even){ background: pink;} 选取偶数的元素
+:nth-child(n+3){ background: pink;} 选取<=x的元素
+:nth-child(-n+3){ background: pink;} 选取>=x的元素
+:nth-last-child(-n+3){ background: pink;} 选取倒数几个的元素
+:nth-last-child(n+3){ background: pink;} 选取除了倒数几个的元素 
+
+8.弹窗有input时背景不滑动
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>demo4</title>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="stylesheet" href="http://pic.lvmama.com/mobile/zt/public/css/base/newGlobal.css">
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        img {
+            width: 100%;
+            display: block;
+        }
+        
+        input,
+        button {
+            border: none;
+            border-radius: 0;
+            background: none;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        a {
+            display: block;
+        }
+        
+        html {
+            font-family: "microsoft yahei", "Arial";
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            width: 100%;
+            font-size: 62.5%;
+        }
+        
+        body {
+            width: 100%;
+            margin: 0 auto;
+            color: #fff;
+            background: #a7e2ff;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-focus-ring-color: rgba(0, 0, 0, 0);
+            focus-focus-ring-color: rgba(0, 0, 0, 0);
+        }
+        
+        #container {
+            height: 5000px;
+        }
+        
+        .personal_info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+        }
+        
+        .personal_info .main {
+            width: 85%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border-radius: 5px;
+            background: #fff;
+            overflow: hidden;
+        }
+        
+        .personal_info .main .sure {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .personal_info .main button {
+            height: 3.5rem;
+            line-height: 3.5rem;
+            padding: 0 4rem;
+            background: #ea3742;
+            font-size: 1.5rem;
+            color: #fff;
+            border-radius: 20px;
+        }
+        
+        .personal_info .main .content {
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 1rem 0 0;
+        }
+        
+        .personal_info .main .content .head {
+            border: 1px solid #000;
+            width: 7.5rem;
+            height: 7.5rem;
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+        
+        .personal_info .main .content .name {
+            color: #444;
+            margin-top: 0.5rem;
+        }
+        
+        .personal_info .main .content .msg {
+            margin: 0.5rem 0;
+        }
+        
+        .personal_info .main .content .msg p {
+            color: #666;
+            display: inline-block;
+        }
+        
+        .personal_info .main .content .msg p:first-child {
+            margin-right: 3rem;
+        }
+        
+        .personal_info .main .content .msg p i {
+            color: #ff9198;
+        }
+        
+        .personal_info .main .content .notice {
+            color: #ff9198;
+            line-height: 2rem;
+            border: 1px solid #ff9198;
+            padding: 0 1rem;
+            display: inline-block;
+        }
+        
+        .personal_info .main .content .address {
+            color: #666;
+            margin-top: 1rem;
+        }
+        
+        .personal_info .main .content .address p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .personal_info .main .content .address ul li {
+            line-height: 2rem;
+            border-bottom: none;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .personal_info .main .content .address ul li input {
+            border: 1px solid #c9c9c9;
+            line-height: 2rem;
+            color: #666;
+            font-size: 1.2rem;
+            padding-left: 0.5rem;
+        }
+        
+        .personal_info .main .content .tips {
+            color: #c0c0c0;
+            font-size: 1.1rem;
+            padding: 0 1rem;
+            line-height: 1.6rem;
+        }
+        
+        .personal_info .main .save {
+            text-align: center;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="personal_info">
+            <div class="main">
+                <div class="tit">
+                    <p>个人信息</p><span class="close"></span>
+                </div>
+                <div class="content">
+                    <span class="head"></span>
+                    <p class="name">萌小雷滴萌</p>
+                    <div class="msg">
+                        <p>我的点评：<i>29</i></p>
+                        <p>精华点评：<i>3</i></p>
+                    </div>
+                    <div class="notice">您距离品牌羽绒睡袋还要加把劲哦！</div>
+                    <div class="address">
+                        <p>我的收货地址</p>
+                        <ul>
+                            <li>姓名：<input type="text"></li>
+                            <li>电话：<input type="text"></li>
+                            <li>地址：<input type="text"></li>
+                        </ul>
+                    </div>
+                    <div class="tips">同用户多条重复点评内容，只随机显示一条，只视1条参与活动，隐藏的点评将不累积点评数！</div>
+                </div>
+                <div class="save"><button>保存</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- <script type="text/javascript" src="http://pic.lvmama.com/mobile/lib/js/zepto.min.js"></script> -->
+    <script type="text/javascript">
+        (function(doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function() {
+                    var clientWidth = docEl.clientWidth;
+                    if (clientWidth > 640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+
+        // $(function() {
+        //     $(".personal_info").height($(document).height());
+        // });
+        document.getElementsByClassName('personal_info')[0].style.height = document.body.scrollHeight + 'px';
+    </script>
+</body>
+</html>
+
+9.
+-webkit-touch-callout:none;
+    H5页面想禁止长按链接或长按图片后弹出菜单。
+    这个属性可以让你禁用系统默认菜单（iOS有效）
+
+-webkit-user-select: none;       
+    H5页面想禁止用户在页面上选中文字、图片等，
+    也就是，让页面内容不可选。这个属性可以让
+    页面内容不被选中。
+
+-webkit-tap-highlight-color 
+    这个属性只用于iOS (iPhone和iPad)。当你点击一个链接或者通过Javascript定义的可点击元素的时候，它就会出现一个半透明的灰色背景。要重设这个表现，你可以设置-webkit-tap-highlight-color为任何颜色。
+    想要禁用这个高亮，设置颜色的透明值为0即可。
+    示例：设置高亮色为50%透明的红色:
+    -webkit-tap-highlight-color: rgba(255,0,0,0.5);
