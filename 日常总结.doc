@@ -1,15 +1,4 @@
 1.由于IOS-app的打开一个webview进行链接访问前，会对url中的中文编码进行解析，如链接中包含escape 编码，则会导致IOS报错，当前webview显示白页；所以url中一定要使用encodeURIComponent编码。
-
-2.textarea标签有默认文字的情况下，点击输入文字，然后删掉输入的文字，正常情况下应该显示的是默认文字，但是在某些手机的一些浏览器，特别是Safari浏览器中，显示的默认文字不全，有缺失的情况。
-    解决办法：height=line-height*rows
-<textarea class="remark" rows="3">
-在w3school，你可以找到你所需要的所有的网站建设教程。
-</textarea>
-.remark::-webkit-input-placeholder{
-   line-height=12px;
-   height=36px;
-}
-
 3.input设置disabled属性时，IOS会使用input value disabled的默认样式#ccc，若要改变其颜色须设置样式属性如下：
 input:disabled
 {
@@ -367,3 +356,4 @@ WeakMap
 只接受对象最为键名（null 除外），不接受其他类型的值作为键名；
 键名是弱引用，键值可以是任意的，键名所指向的对象可以被垃圾回收，此时键名是无效的；
 不能遍历，方法有 get、set、has、delete。
+5.强缓存就是给资源设置个过期时间，客户端每次请求资源时都会看是否过期；只有在过期才会去询问服务器。所以，强缓存就是为了给客户端自给自足用的。而当某天，客户端请求该资源时发现其过期了，这是就会去请求服务器了，而这时候去请求服务器的这过程就可以设置协商缓存。这时候，协商缓存就是需要客户端和服务器两端进行交互的。
